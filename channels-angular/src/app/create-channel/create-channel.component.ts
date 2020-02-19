@@ -1,3 +1,4 @@
+import { DataAccessService } from './../services/data-access.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateChannelComponent implements OnInit {
 
-  constructor() { }
+  constructor(private dataAccessService: DataAccessService) { }
 
   ngOnInit() {
+  }
+
+  onClickMe() {
+    this.dataAccessService.postUser();
+    console.log('Was clicked.');
+    alert('Clicked');
   }
 
 }
