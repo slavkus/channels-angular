@@ -15,8 +15,6 @@ export class CreateChannelComponent implements OnInit {
 
   onClickMe() {
     this.dataAccessService.postUser();
-    console.log('Was clicked.');
-    alert('Clicked');
   }
 
 }
