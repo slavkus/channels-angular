@@ -11,6 +11,7 @@ export class CreateChannelComponent implements OnInit {
   constructor(private dataAccessService: DataAccessService) { }
 
   ngOnInit() {
+    this.onClickMe();
   }
 
   onClickMe() {

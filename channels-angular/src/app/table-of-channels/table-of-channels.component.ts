@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import { MatButton } from '@angular/material/button';
+import { MatTableDataSource } from '@angular/material/table';
+
+export interface Elements {
+  id: number;
+  name: string;
+  url: string;
+}
 
 @Component({
   selector: 'app-table-of-channels',
@@ -10,12 +15,15 @@ import { MatButton } from '@angular/material/button';
 export class TableOfChannelsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'url', 'actions'];
   dataSource = new MatTableDataSource<Elements>(ELEMENT_DATA);
+  constructor() { }
+
+
 
   ngOnInit() {
   }
 
 }
-// dummy data for testing
+
 const ELEMENT_DATA: Elements[] = [
   {
     id: 1,
@@ -34,8 +42,4 @@ const ELEMENT_DATA: Elements[] = [
   },
 ];
 
-export interface Elements {
-  id: number;
-  name: string;
-  url: string;
-}
+

@@ -16,24 +16,48 @@ interface Authorization {
   };
 }
 
+interface ChannelsAccess {
+  name: string;
+  id: number;
+  url: string;
+  lang: string;
+  template: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class DataAccessService {
   private options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-  private authorizationResponse: Authorization;
-  private jwtToken: string;
+  public jwtToken: string;
   constructor(private client: HttpClient) { }
 
   postUser() {
     return this.client.post<Authorization>('http://176.31.182.158:3001/auth/local',
       { identifier: 'uniqcaster', password: 'cast457' }, this.options).subscribe((data: Authorization) => {
-        console.log('POST Request is successful ', data);
-        this.jwtToken = data.jwt;
+        // console.log('POST Request is successful ', data);
+        this.jwtToken = JSON.stringify(data.jwt);
+        if (this.jwtToken) {
+          this.postChannels(this.jwtToken);
+        }
         console.log('JWT Token: ' + this.jwtToken);
       },
         error => {
-          console.log('Error, error');
+          // console.log('Error, error');
         });
+  }
+
+  postChannels(jwtToken: string) {
+    console.log('JWT In Channels ' + jwtToken);
+    const optionsChannel = new HttpHeaders().set('Authorization:', 'Bearer ' + jwtToken);
+    return this.client.post<ChannelsAccess>('http://176.31.182.158:3001/channels', optionsChannel)
+    .subscribe((data: ChannelsAccess) => {
+      console.log('POST Request is successful ', data);
+    },
+      error => {
+        console.log('Error, error');
+      });
   }
 }
