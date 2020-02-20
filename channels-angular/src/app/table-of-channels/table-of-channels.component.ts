@@ -1,3 +1,4 @@
+import { DataAccessService } from './../services/data-access.service';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -12,14 +13,22 @@ export interface Elements {
   templateUrl: './table-of-channels.component.html',
   styleUrls: ['./table-of-channels.component.css']
 })
+
 export class TableOfChannelsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'url', 'actions'];
   dataSource = new MatTableDataSource<Elements>(ELEMENT_DATA);
   constructor() { }
 
+  private dataForTable;
+  private dataAS: DataAccessService;
 
+  /* fillTable() {
+    this.dataForTable = this.dataAS.getData();
+    console.log('Data: ' + this.dataForTable);
+  } */
 
   ngOnInit() {
+    // this.fillTable();
   }
 
 }

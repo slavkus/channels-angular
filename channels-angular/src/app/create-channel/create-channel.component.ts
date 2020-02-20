@@ -18,4 +18,12 @@ export class CreateChannelComponent implements OnInit {
     this.dataAccessService.postUser();
   }
 
+  openForm() {
+    document.getElementById("myForm").style.display = "block";
+  }
+
+  closeForm() {
+    document.getElementById("myForm").style.display = "none";
+  }
+
 }

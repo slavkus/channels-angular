@@ -1,11 +1,11 @@
-import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
   HttpHeaders,
   HttpParams
 } from '@angular/common/http';
-
+import { merge, Observable, of as observableOf } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 interface Authorization {
   jwt: string;
@@ -22,14 +22,10 @@ interface Authorization {
   };
 }
 
-interface ChannelsAccess {
-  name: string;
+export interface ChannelsFilter {
   id: number;
+  name: string;
   url: string;
-  lang: string;
-  template: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 @Injectable({
@@ -39,38 +35,35 @@ interface ChannelsAccess {
 export class DataAccessService {
   private options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
   public jwtToken: string;
+  public channelData;
   constructor(private client: HttpClient) { }
 
   postUser() {
     return this.client.post<Authorization>('http://176.31.182.158:3001/auth/local',
       { identifier: 'uniqcaster', password: 'cast457' }, this.options).subscribe((data: Authorization) => {
-        // console.log('POST Request is successful ', data);
         this.jwtToken = JSON.stringify(data.jwt).slice(1, -1);
         localStorage.setItem('token', this.jwtToken);
         if (this.jwtToken) {
           this.postChannels(this.jwtToken);
         }
-        // console.log('JWT Token: ' + this.jwtToken);
       },
         error => {
-          // console.log('Error, error');
+          console.log('Error, error');
         });
   }
 
   postChannels(jwtToken: string) {
-    console.log('JWT In Channels ' + jwtToken);
-    // const optionsChannel = new HttpHeaders().set('Authorization', 'Bearer ' + jwtToken);
-    /* const headers = new Headers({
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + jwtToken,
-    }); */
     const params = new HttpParams().set('Authorization: ', 'Bearer ' + jwtToken);
-    return this.client.post<ChannelsAccess>('http://176.31.182.158:3001/channels', params)
-      .subscribe((data: ChannelsAccess) => {
-        console.log('POST Request is successful ', data);
+    return this.client.post('http://176.31.182.158:3001/channels', params)
+      .subscribe((data) => {
+        this.channelData = data;
+        
       },
         error => {
         });
   }
-}
 
+  getData() {
+    return this.channelData;
+  }
+}

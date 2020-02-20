@@ -1,2 +1,17 @@
 <h1>Channels</h1>
-<button>Create A Channel</button>
+<button (click)="openForm()">Create A Channel</button>
+
+<div class="form-popup" id="myForm">
+    <form action="" class="form-container">
+      <h1>Login</h1>
+  
+      <label for="nazivKanala"><b>Naziv kanala: </b></label>
+      <input type="text" placeholder="Naziv" name="nazivKanala" required>
+  
+      <label for="urlKanala"><b>Url kanala: </b></label>
+      <input type="text" placeholder="Url" name="urlKanala">
+  
+      <button type="submit" class="btn">Potvrdi</button>
+      <button type="submit" class="btn cancel" onclick="closeForm()">Zatvori</button>
+    </form>
+  </div>
