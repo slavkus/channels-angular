@@ -1,5 +1,11 @@
+import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams
+} from '@angular/common/http';
+
 
 interface Authorization {
   jwt: string;
@@ -29,6 +35,7 @@ interface ChannelsAccess {
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataAccessService {
   private options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
   public jwtToken: string;
@@ -38,11 +45,12 @@ export class DataAccessService {
     return this.client.post<Authorization>('http://176.31.182.158:3001/auth/local',
       { identifier: 'uniqcaster', password: 'cast457' }, this.options).subscribe((data: Authorization) => {
         // console.log('POST Request is successful ', data);
-        this.jwtToken = JSON.stringify(data.jwt);
+        this.jwtToken = JSON.stringify(data.jwt).slice(1, -1);
+        localStorage.setItem('token', this.jwtToken);
         if (this.jwtToken) {
           this.postChannels(this.jwtToken);
         }
-        console.log('JWT Token: ' + this.jwtToken);
+        // console.log('JWT Token: ' + this.jwtToken);
       },
         error => {
           // console.log('Error, error');
@@ -51,13 +59,18 @@ export class DataAccessService {
 
   postChannels(jwtToken: string) {
     console.log('JWT In Channels ' + jwtToken);
-    const optionsChannel = new HttpHeaders().set('Authorization:', 'Bearer ' + jwtToken);
-    return this.client.post<ChannelsAccess>('http://176.31.182.158:3001/channels', optionsChannel)
-    .subscribe((data: ChannelsAccess) => {
-      console.log('POST Request is successful ', data);
-    },
-      error => {
-        console.log('Error, error');
-      });
+    // const optionsChannel = new HttpHeaders().set('Authorization', 'Bearer ' + jwtToken);
+    /* const headers = new Headers({
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + jwtToken,
+    }); */
+    const params = new HttpParams().set('Authorization: ', 'Bearer ' + jwtToken);
+    return this.client.post<ChannelsAccess>('http://176.31.182.158:3001/channels', params)
+      .subscribe((data: ChannelsAccess) => {
+        console.log('POST Request is successful ', data);
+      },
+        error => {
+        });
   }
 }
+
