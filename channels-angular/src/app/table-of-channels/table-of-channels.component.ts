@@ -17,18 +17,15 @@ export interface Elements {
 export class TableOfChannelsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'url', 'actions'];
   dataSource = new MatTableDataSource<Elements>(ELEMENT_DATA);
-  constructor() { }
+  constructor(private dataAS: DataAccessService) { }
 
-  private dataForTable;
-  private dataAS: DataAccessService;
-
-  /* fillTable() {
-    this.dataForTable = this.dataAS.getData();
-    console.log('Data: ' + this.dataForTable);
-  } */
+  private dataForTable: any;
 
   ngOnInit() {
-    // this.fillTable();
+    this.dataForTable = this.dataAS.channelData;
+    // this.dataAS.addChannel();
+    // this.dataAS.updateChannel();
+    // this.dataAS.deleteChannel();
   }
 
 }

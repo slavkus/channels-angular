@@ -23,7 +23,6 @@ interface Authorization {
 }
 
 export interface ChannelsFilter {
-  id: number;
   name: string;
   url: string;
 }
@@ -35,8 +34,15 @@ export interface ChannelsFilter {
 export class DataAccessService {
   private options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
   public jwtToken: string;
-  public channelData;
+  public channelData: any;
   constructor(private client: HttpClient) { }
+
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    })
+  };
 
   postUser() {
     return this.client.post<Authorization>('http://176.31.182.158:3001/auth/local',
@@ -57,7 +63,6 @@ export class DataAccessService {
     return this.client.post('http://176.31.182.158:3001/channels', params)
       .subscribe((data) => {
         this.channelData = data;
-        
       },
         error => {
         });
@@ -65,5 +70,17 @@ export class DataAccessService {
 
   getData() {
     return this.channelData;
+  }
+
+  deleteChannel(id: number): Observable<{}> {
+    return this.client.delete('http://176.31.182.158:3001/channels/' + id, this.httpOptions);
+  }
+
+  addChannel(name: string, url: string){
+    return this.client.post<ChannelsFilter>('http://176.31.182.158:3001/channels', this.httpOptions);
+  }
+
+  updateChannel(id: number): Observable<ChannelsFilter> {
+    return this.client.put<ChannelsFilter>('http://176.31.182.158:3001/channels', this.httpOptions);
   }
 }
